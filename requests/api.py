@@ -13,7 +13,7 @@ This module implements the Requests API.
 
 from . import sessions
 from .safe_mode import catch_exceptions_if_in_safe_mode
-
+global_session = sessions.session(config={'pool_connections':100})
 
 @catch_exceptions_if_in_safe_mode
 def request(method, url, **kwargs):
@@ -41,17 +41,14 @@ def request(method, url, **kwargs):
 
     # if this session was passed in, leave it open (and retain pooled connections);
     # if we're making it just for this call, then close it when we're done.
-    adhoc_session = False
     session = kwargs.pop('session', None)
     if session is None:
-        session = sessions.session()
-        adhoc_session = True
+        session = global_session
 
     try:
         return session.request(method=method, url=url, **kwargs)
-    finally:
-        if adhoc_session:
-            session.close()
+    except:
+        pass
 
 
 def get(url, **kwargs):
