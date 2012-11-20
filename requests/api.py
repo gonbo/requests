@@ -13,7 +13,7 @@ This module implements the Requests API.
 
 from . import sessions
 from .safe_mode import catch_exceptions_if_in_safe_mode
-global_session = sessions.session(config={'pool_connections':100})
+global_session = sessions.session(config={'pool_maxsize':100})
 
 @catch_exceptions_if_in_safe_mode
 def request(method, url, **kwargs):
